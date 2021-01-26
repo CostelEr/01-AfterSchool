@@ -1,0 +1,32 @@
+overwrite: true
+schema: "src/graphql/**/*.schema.graphql"
+documents: "src/{components,containers}/**/*.graphql"
+generates:
+  src/graphql/schemas/introspected.schema.json:
+    plugins:
+      - introspection
+  src/graphql/types.d.ts:
+    hooks:
+      afterOneFileWrite:
+        - prettier --write
+    plugins:
+      - typescript
+      - typescript-resolvers
+    config:
+      enumsAsTypes: true
+  src/:
+    hooks:
+      afterOneFileWrite:
+        - prettier --write
+    preset: near-operation-file
+    presetConfig:
+      extension: .ts
+      folder: __graphql__
+      baseTypesPath: graphql/types.d.ts
+    plugins:
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHOC: false
+      withHooks: true
+      withComponent: false
